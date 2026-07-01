@@ -1,0 +1,9 @@
+node_modules
+data
+image
+public/images/original
+.env
+*.log
+copy_images.js
+verify_system.js
+PRAMUKA_ATTENDANCE_PROJECT_SPEC.md
