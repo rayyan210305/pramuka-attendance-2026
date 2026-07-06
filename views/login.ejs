@@ -1,0 +1,41 @@
+<%- include('layouts/header') %>
+<div style="min-height: 90vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+  <div class="glass-card" style="position: relative; width: 100%; max-width: 420px; padding: 2.5rem 2.25rem; border-color: rgba(251, 191, 36, 0.4);">
+    <div style="position: absolute; bottom: 0; right: 0; pointer-events: none; opacity: 0.1; z-index: 0;">
+      <img src="/images/maskot.png" alt="Maskot LP3 XVII" style="height: 70px; width: auto; filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.6));">
+    </div>
+    <div style="position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 1.1rem; margin-bottom: 1.25rem;">
+      <img src="/images/logo_gpp.png" alt="Logo Satuan Komunitas GPP Aceh" style="height: 52px; width: auto; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.25));">
+      <span style="width:1px;height:40px;background:rgba(251,191,36,0.25);display:inline-block;"></span>
+      <img src="/images/logo_lp3_xvii.png" alt="Logo LP3 Putra Aceh" style="height: 58px; width: auto; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.25));">
+    </div>
+
+    <h1 style="text-align: center; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">
+      Masuk Admin
+    </h1>
+    <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin: 0.5rem 0 1.5rem;">
+      LP3 XVII 2026 • Sistem Absensi QR
+    </p>
+
+    <% if (errorMessage) { %>
+      <div style="display:flex; align-items:center; gap:0.5rem; color: var(--color-danger); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.35); padding: 0.6rem 0.9rem; border-radius: var(--border-radius-md); font-size: 0.85rem; margin-bottom: 1.25rem;">
+        <%- icon('alert', 16) %> <%= errorMessage %>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label class="form-label" for="loginPin">PIN Admin</label>
+        <input type="password" id="loginPin" name="pin" class="form-control" placeholder="Masukkan PIN..." required autofocus style="letter-spacing: 4px; font-family: var(--font-tech);">
+      </div>
+      <button type="submit" class="btn btn-gold" style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+        <%- icon('lock', 16) %> Masuk ke Sistem
+      </button>
+    </form>
+
+    <p style="text-align: center; color: var(--text-muted); font-size: 0.72rem; margin-top: 1.25rem;">
+      Halaman ini khusus petugas/admin LP3 XVII 2026.
+    </p>
+  </div>
+</div>
+<%- include('layouts/footer') %>
