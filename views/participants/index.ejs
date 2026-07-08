@@ -1,0 +1,414 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<style>
+.p-group {
+  border: 1px solid var(--bg-glass-border);
+  border-radius: var(--border-radius-md);
+  background: radial-gradient(circle at top right, rgba(220,38,38,0.06), transparent 60%), rgba(255,255,255,0.02);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+.p-group-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap; padding: 1rem 1.25rem; cursor: pointer;
+  border-left: 3px solid var(--gold-accent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.p-group {
+  position: relative;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.09);
+}
+.p-group-title { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
+.p-group-counts { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.p-group-counts .pill {
+  padding: 0.3rem 0.75rem; border-radius: var(--border-radius-full); font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  position: relative; overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.p-group-counts .pill::after {
+  content: ''; position: absolute; top: 0; left: 6%; right: 6%; height: 46%; border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.16), transparent);
+  pointer-events: none;
+}
+.pill-total { background: rgba(251,191,36,0.15); color: var(--gold-accent); border: 1px solid rgba(251,191,36,0.35); }
+.pill-penggalang { background: rgba(220,38,38,0.18); color: #fca5a5; border: 1px solid rgba(220,38,38,0.4); }
+.pill-penegak { background: rgba(251,191,36,0.12); color: var(--gold-accent); border: 1px solid rgba(251,191,36,0.25); }
+.p-group-actions { display: flex; gap: 0.6rem; align-items: center; }
+.p-group-body { padding: 0 1.25rem 1.25rem; }
+.p-group.collapsed .p-group-body { display: none; }
+.toggle-arrow { transition: transform 0.25s ease; color: var(--text-muted); font-size: 0.8rem; }
+.p-group.collapsed .toggle-arrow { transform: rotate(-90deg); }
+</style>
+
+<div class="main-wrapper">
+  <div class="glass-card">
+    <div class="glass-card-header" style="flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2 class="page-title">Kelola Peserta</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">Data santri dikelompokkan per pesantren</p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="/participants/barcodes" class="btn btn-outline">
+          <%- icon('qr', 16) %> Cetak Kartu QR
+        </a>
+        <button class="btn btn-gold" onclick="openCreateModal('')">
+          <%- icon('plus', 16) %> Tambah Peserta
+        </button>
+      </div>
+    </div>
+
+    <!-- Ringkasan -->
+    <div class="stats-grid" style="margin-bottom: 1.5rem;">
+      <div class="stat-card">
+        <div class="stat-icon"><%- icon('building', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value"><%= groups.length %></div>
+          <div class="stat-label">Pesantren</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--crimson-primary); border-color: rgba(220,38,38,0.35); background: rgba(220,38,38,0.08);"><%- icon('users', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value"><%= groups.reduce((s,g) => s + g.penggalang, 0) %></div>
+          <div class="stat-label">Santri Penggalang</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--gold-warm); border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.08);"><%- icon('users', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value"><%= groups.reduce((s, g) => s + g.penegak, 0) %></div>
+          <div class="stat-label">Santri Penegak</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><%- icon('users', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value"><%= groups.reduce((s, g) => s + g.total, 0) %></div>
+          <div class="stat-label">Total Peserta</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <form method="GET" action="/participants" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <input type="text" name="search" class="form-control" placeholder="Cari Nama, Barcode ID, Pesantren..." value="<%= filters.search || '' %>">
+      </div>
+      <div style="width: 220px;">
+        <select name="school" class="form-select" onchange="this.form.submit()">
+          <option value="">-- Semua Pesantren --</option>
+          <% (schools || []).forEach(sch => { %>
+            <option value="<%= sch %>" <%= filters.school === sch ? 'selected' : '' %>><%= sch %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div style="width: 180px;">
+        <select name="category" class="form-select" onchange="this.form.submit()">
+          <option value="">-- Semua Golongan --</option>
+          <option value="PENGGALANG" <%= filters.category === 'PENGGALANG' ? 'selected' : '' %>>PENGGALANG</option>
+          <option value="PENEGAK" <%= filters.category === 'PENEGAK' ? 'selected' : '' %>>PENEGAK</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-outline">Cari</button>
+      <% if (filters.search || filters.school || filters.category) { %>
+        <a href="/participants" class="btn btn-outline" style="color: var(--text-muted);">Hapus Filter</a>
+      <% } %>
+    </form>
+
+    <% if (!groups || groups.length === 0) { %>
+      <div class="glass-card" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+        Tidak ada peserta ditemukan.
+      </div>
+    <% } %>
+
+    <% groups.forEach((g, gi) => { %>
+      <div class="p-group" id="group-<%= gi %>">
+        <div class="p-group-header" onclick="toggleGroup('<%= gi %>')">
+          <div class="p-group-title">
+            <%- icon('building', 20) %>
+            <h3 style="font-size: 1.05rem; color: var(--text-primary); margin: 0;"><%= g.name %></h3>
+            <div class="p-group-counts">
+              <span class="pill pill-total">Total <%= g.total %></span>
+              <span class="pill pill-penggalang">Penggalang <%= g.penggalang %></span>
+              <span class="pill pill-penegak">Penegak <%= g.penegak %></span>
+            </div>
+          </div>
+          <div class="p-group-actions">
+            <span class="toggle-arrow">▼</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation(); openCreateModal('<%= g.name %>')"><%- icon('plus', 14) %> Tambah Santri</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="event.stopPropagation(); location.href='/participants/barcodes?school=<%= encodeURIComponent(g.name) %>'"><%- icon('qr', 14) %> Cetak Kartu QR</button>
+          </div>
+        </div>
+
+        <div class="p-group-body">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Barcode ID</th>
+                  <th>Nama Lengkap Santri</th>
+                  <th>Kode</th>
+                  <th>Golongan</th>
+                  <th>ID Card</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (g.participants && g.participants.length > 0) { %>
+                  <% g.participants.forEach(p => { %>
+                    <tr>
+                      <td><code style="color:var(--gold-accent); font-family:var(--font-tech); font-weight:700;"><%= p.barcode_id %></code></td>
+                      <td><strong><%= p.name %></strong></td>
+                      <td><code style="font-weight:700; color:var(--text-secondary);"><%= p.kode || '-' %></code></td>
+                      <td>
+                        <span class="badge <%= p.category === 'PENEGAK' ? 'badge-penegak' : 'badge-penggalang' %>">
+                          <%= p.category %>
+                        </span>
+                      </td>
+                      <td>
+                        <button class="btn btn-outline btn-sm" onclick="showIdCardModal('<%= p.barcode_id %>', '<%= p.name %>', '<%= p.school %>', '<%= p.category %>', '<%= p.kode || '' %>')">
+                          <%- icon('idcard', 14) %> Cetak ID Card
+                        </button>
+                      </td>
+                      <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteResource('/api/participants/<%= p.id %>', 'Peserta')">Hapus</button>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Belum ada santri di golongan ini.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Modal Create Participant -->
+<div id="createParticipantModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+  <div class="glass-card" style="width: 100%; max-width: 500px; padding: 2rem;">
+    <div class="glass-card-header">
+      <h3 style="color: var(--text-primary);">Tambah Peserta LP3 XVII</h3>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('createParticipantModal')"><%- icon('x', 16) %></button>
+    </div>
+    <form id="createParticipantForm">
+      <div class="form-group">
+        <label class="form-label">Barcode ID (Kosongkan untuk Auto-Generate)</label>
+        <input type="text" name="barcode_id" class="form-control" placeholder="Otomatik: PRM-2026-XXXX">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap Santri</label>
+        <input type="text" name="name" class="form-control" placeholder="Contoh: Ahmad Fauzi" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pesantren</label>
+        <select name="school" id="schoolSelectInput" class="form-select" required>
+          <option value="">-- Pilih Pesantren --</option>
+          <option value="__new__">+ Pesantren Baru…</option>
+          <% (schools || []).forEach(sch => { %>
+            <option value="<%= sch %>"><%= sch %></option>
+          <% }) %>
+        </select>
+        <input type="text" name="school_new" id="schoolNewInput" style="display:none; margin-top:0.5rem;" class="form-control" placeholder="Nama Pesantren baru">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Golongan Pramuka</label>
+        <select name="category" class="form-select" required>
+          <option value="PENGGALANG">PENGGALANG</option>
+          <option value="PENEGAK">PENEGAK</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kode Pesantren <span style="color: var(--text-muted); font-weight: 400;">(opsional — dipakai untuk nama file kartu)</span></label>
+        <input type="text" name="kode" class="form-control" placeholder="Contoh: ALMANAR" maxlength="50">
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('createParticipantModal')">Batal</button>
+        <button type="submit" class="btn btn-gold">Simpan Peserta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Printable ID Card with Official LP3 XVII Branding -->
+<div id="idCardModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+  <div class="glass-card" style="width: 100%; max-width: 440px; padding: 2rem; text-align: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3 style="color: var(--text-primary);">Kartu Identitas LP3 XVII</h3>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('idCardModal')"><%- icon('x', 16) %></button>
+    </div>
+
+    <!-- Printable Card Box -->
+    <div id="printableCard" style="background: #ffffff; color: #000; padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; border: 3px solid #dc2626; position: relative;">
+
+      <!-- Logos Header -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+        <img src="/images/logo_gpp.png" alt="Satuan Komunitas GPP Aceh" style="height: 44px; width: auto;">
+        <img src="/images/logo_lp3_xvii.png" alt="Logo LP3 Putra Aceh" style="height: 50px; width: auto;">
+      </div>
+
+      <div style="font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; color: #991b1b; margin-bottom: 0.1rem;">
+        LP3 XVII 2026
+      </div>
+      <div style="font-size: 0.62rem; color: #475569; font-weight: 700; margin-bottom: 0.85rem; text-transform: uppercase; letter-spacing: 0.3px;">
+        Satuan Komunitas Gerakan Pramuka Aceh (GPP Aceh) • Bireuen
+      </div>
+
+      <div style="border-top: 2px dashed #cbd5e1; margin-bottom: 0.85rem;"></div>
+
+      <h2 id="cardName" style="font-size: 1.3rem; font-weight: 800; color: #0f172a; margin-bottom: 0.2rem;">Ahmad Fauzi</h2>
+      <p id="cardSchool" style="font-size: 0.875rem; color: #475569; font-weight: 600; margin-bottom: 0.35rem;">Pesantren Al Zahrah Bireuen</p>
+
+      <div id="cardCategory" style="display: inline-block; background: #dc2626; color: #ffffff; padding: 0.2rem 0.85rem; border-radius: 99px; font-size: 0.75rem; font-weight: 800; margin-bottom: 0.85rem;">
+        PENEGAK
+      </div>
+
+      <!-- QR Code Only (Clear & Large) -->
+      <div style="display: flex; flex-direction: column; align-items: center; margin-top: 0.5rem; background: #ffffff; padding: 0.6rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <div style="font-size: 0.7rem; font-weight: 800; color: #dc2626; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px;">
+          Scan QR ini saat absensi
+        </div>
+        <div id="cardQrCode" style="display: flex; justify-content: center;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem;">
+      <button type="button" class="btn btn-gold" onclick="printCard()"><%- icon('printer', 16) %> Cetak ID Card</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('createParticipantForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  if (data.school === '__new__') {
+    data.school = data.school_new || '';
+    delete data.school_new;
+  }
+
+  try {
+    const res = await fetch('/api/participants', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      showNotification('Berhasil', 'Peserta baru LP3 XVII berhasil ditambahkan', 'success');
+      setTimeout(() => location.reload(), 600);
+    } else {
+      showNotification('Gagal', result.message, 'danger');
+    }
+  } catch (err) {
+    showNotification('Error', 'Terjadi kesalahan sistem', 'danger');
+  }
+});
+
+const schoolSelect = document.getElementById('schoolSelectInput');
+const schoolNewInput = document.getElementById('schoolNewInput');
+
+schoolSelect.addEventListener('change', () => {
+  const isNew = schoolSelect.value === '__new__';
+  schoolNewInput.style.display = isNew ? 'block' : 'none';
+  if (isNew) schoolNewInput.focus();
+});
+
+function openCreateModal(school) {
+  if (school) {
+    if (![...schoolSelect.options].some(o => o.value === school)) {
+      schoolSelect.add(new Option(school, school));
+    }
+    schoolSelect.value = school;
+  } else {
+    schoolSelect.value = '';
+  }
+  schoolNewInput.style.display = 'none';
+  schoolNewInput.value = '';
+  openModal('createParticipantModal');
+}
+
+function toggleGroup(gi) {
+  document.getElementById('group-' + gi).classList.toggle('collapsed');
+}
+
+function showIdCardModal(barcodeId, name, school, category, kode) {
+  document.getElementById('cardName').innerText = name;
+  document.getElementById('cardSchool').innerText = school;
+  document.getElementById('cardCategory').innerText = category;
+  document.getElementById('cardCategory').style.background = category === 'PENGGALANG' ? '#dc2626' : '#d97706';
+
+  window._idCardPrintData = { barcodeId: barcodeId, name: name, school: school, category: category, kode: kode || '' };
+
+  openModal('idCardModal');
+
+  // Render QR Code (besar & jelas)
+  const qrElem = document.getElementById("cardQrCode");
+  if (qrElem) {
+    qrElem.innerHTML = '';
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(qrElem, {
+        text: barcodeId,
+        width: 150,
+        height: 150,
+        colorDark : "#0f172a",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+    }
+  }
+}
+
+function stripFileName(value) {
+  return String(value || '')
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '')
+    .replace(/\s+/g, '')
+    .replace(/^_+|_+$/g, '');
+}
+
+function buildIdCardFileName(data) {
+  const name = stripFileName(data.name) || 'PESERTA';
+  const schoolPart = stripFileName(data.kode) || stripFileName(data.school) || 'PESANTREN';
+  const pesantren = 'Pesantren' + schoolPart;
+  const category = data.category === 'PENEGAK' ? 'Penegak' : 'Penggalang';
+  const noMatch = String(data.barcodeId || '').match(/(\d+)\s*$/);
+  const noPeserta = noMatch ? noMatch[1].padStart(4, '0') : stripFileName(data.barcodeId) || '0000';
+  return `${name}_${pesantren}_${category}_${noPeserta}`;
+}
+
+function printCard() {
+  const cardContent = document.getElementById('printableCard').outerHTML;
+  const data = window._idCardPrintData || { name: 'ID Card', school: '', category: 'PENGGALANG', barcodeId: '' };
+  const fileName = buildIdCardFileName(data);
+  const win = window.open('', '', 'width=600,height=600');
+  win.document.write(`
+    <html>
+      <head>
+        <title>${fileName}</title>
+        <style>
+          body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        </style>
+      </head>
+      <body>
+        ${cardContent}
+        <script>
+          window.onload = function() { window.print(); window.close(); }
+        <\/script>
+      </body>
+    </html>
+  `);
+  win.document.close();
+}
+</script>
+
+<%- include('../layouts/footer') %>
