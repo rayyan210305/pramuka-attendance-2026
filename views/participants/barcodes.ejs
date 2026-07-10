@@ -1,0 +1,108 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="main-wrapper">
+  <div class="glass-card" style="margin-bottom: 2rem;">
+    <div class="glass-card-header" style="flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2 class="page-title">Cetak Kartu QR Peserta</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">
+          Gunakan halaman ini untuk scan langsung dari layar HP/Laptop atau untuk cetak kartu peserta.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-gold" onclick="window.print()">
+          <%- icon('printer', 16) %> Cetak Kartu
+        </button>
+        <a href="/participants" class="btn btn-outline">
+          <%- icon('arrowleft', 16) %> Kembali ke Data Peserta
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Grid Container -->
+  <div id="printArea" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+    <% if (participants && participants.length > 0) { %>
+      <% participants.forEach((p, idx) => { %>
+        <div class="participant-card-item" style="background: #ffffff; color: #000; border-radius: 14px; padding: 1.25rem; border: 2px solid #dc2626; box-shadow: 0 10px 25px rgba(0,0,0,0.4); text-align: center; position: relative;">
+          <!-- Header Logos -->
+          <div style="display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <img src="/images/logo_gpp.png" alt="Satuan Komunitas GPP Aceh" style="height: 34px; width: auto;">
+            <img src="/images/logo_lp3_xvii.png" alt="Logo LP3 Putra Aceh" style="height: 40px; width: auto;">
+          </div>
+
+          <div style="font-weight: 800; font-size: 0.85rem; color: #991b1b; letter-spacing: 0.5px;">
+            LP3 XVII 2026 • KARTU PESERTA
+          </div>
+          <div style="font-size: 0.7rem; color: #64748b; font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase;">
+            SATUAN KOMUNITAS GERAKAN PRAMUKA ACEH
+          </div>
+
+          <div style="border-top: 1.5px dashed #cbd5e1; margin-bottom: 0.75rem;"></div>
+
+          <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.15rem;"><%= p.name %></h3>
+          <p style="font-size: 0.85rem; color: #475569; font-weight: 600; margin-bottom: 0.35rem;"><%= p.school %></p>
+          <div style="display: inline-block; background: <%= p.category === 'PENGGALANG' ? '#dc2626' : '#d97706' %>; color: #ffffff; padding: 0.15rem 0.75rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800; margin-bottom: 0.75rem;">
+            <%= p.category %>
+          </div>
+
+          <!-- QR Code Only (Clear & Large) -->
+          <div style="display: flex; flex-direction: column; align-items: center; margin-top: 0.5rem; background: #ffffff; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <div style="font-size: 0.62rem; font-weight: 800; color: #dc2626; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px;">
+              Scan QR ini saat absensi
+            </div>
+            <div id="qrcode-<%= p.id %>" class="qr-container" style="display: flex; justify-content: center;"></div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+        Belum ada peserta terdaftar.
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+@media print {
+  body { background: #ffffff !important; color: #000000 !important; }
+  .navbar, .footer, .glass-card-header, .btn { display: none !important; }
+  .main-wrapper { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+  #printArea { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
+  .participant-card-item { page-break-inside: avoid; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Nama file default saat Save as PDF (ikut judul halaman)
+  const sch = '<%= school || "" %>'.trim();
+  const count = <%= participants ? participants.length : 0 %>;
+  if (sch) {
+    document.title = 'Kartu_QR_' + sch.replace(/[\\/:*?"<>|]+/g, '_').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+  } else {
+    document.title = 'Kartu_QR_' + count + '_Peserta';
+  }
+
+  <% if (participants && participants.length > 0) { %>
+    <% participants.forEach(p => { %>
+      // Render QR Code (besar & jelas)
+      const qrElem = document.getElementById("qrcode-<%= p.id %>");
+      if (qrElem && typeof QRCode !== 'undefined') {
+        new QRCode(qrElem, {
+          text: "<%= p.barcode_id %>",
+          width: 150,
+          height: 150,
+          colorDark : "#0f172a",
+          colorLight : "#ffffff",
+          correctLevel : QRCode.CorrectLevel.H
+        });
+      }
+    <% }) %>
+  <% } %>
+});
+</script>
+
+<%- include('../layouts/footer') %>
