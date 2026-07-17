@@ -1,0 +1,116 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="main-wrapper">
+  <div class="glass-card">
+    <div class="glass-card-header">
+      <div>
+        <h2 class="page-title">Kelola Acara</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">Daftar acara utama kepramukaan</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('createEventModal')">
+        <%- icon('plus', 16) %> Tambah Acara
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama Acara</th>
+            <th>Deskripsi</th>
+            <th>Tanggal Mulai</th>
+            <th>Tanggal Selesai</th>
+            <th>Jumlah Kegiatan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (events && events.length > 0) { %>
+            <% events.forEach(ev => { %>
+              <tr>
+                <td><code>#<%= ev.id %></code></td>
+                <td><strong><%= ev.name %></strong></td>
+                <td><%= ev.description || '-' %></td>
+                <td><%= ev.start_date %></td>
+                <td><%= ev.end_date %></td>
+                <td><span class="badge badge-type"><%= ev.activity_count %> Kegiatan</span></td>
+                <td><span class="badge badge-active"><%= ev.status === 'ACTIVE' ? 'AKTIF' : ev.status === 'SCHEDULED' ? 'TERJADWAL' : ev.status === 'COMPLETED' ? 'SELESAI' : ev.status === 'CANCELLED' ? 'DIBATALKAN' : ev.status %></span></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" onclick="deleteResource('/api/events/<%= ev.id %>', 'Acara')">Hapus</button>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">Belum ada acara.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Create Event -->
+<div id="createEventModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+  <div class="glass-card" style="width: 100%; max-width: 500px; padding: 2rem;">
+    <div class="glass-card-header">
+      <h3 style="color: var(--text-primary);">Tambah Acara Baru</h3>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('createEventModal')"><%- icon('x', 16) %></button>
+    </div>
+    <form id="createEventForm">
+      <div class="form-group">
+        <label class="form-label">Nama Acara</label>
+        <input type="text" name="name" class="form-control" placeholder="Contoh: PRAMUKA 2026" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deskripsi</label>
+        <textarea name="description" class="form-control" rows="2" placeholder="Deskripsi singkat event..."></textarea>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label class="form-label">Tanggal Mulai</label>
+          <input type="date" name="start_date" class="form-control" required value="2026-08-05">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tanggal Selesai</label>
+          <input type="date" name="end_date" class="form-control" required value="2026-08-07">
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('createEventModal')">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan Acara</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  
+  try {
+    const res = await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      showNotification('Berhasil', 'Acara baru berhasil ditambahkan', 'success');
+      setTimeout(() => location.reload(), 600);
+    } else {
+      showNotification('Gagal', result.message, 'danger');
+    }
+  } catch (err) {
+    showNotification('Error', 'Terjadi kesalahan sistem', 'danger');
+  }
+});
+</script>
+
+<%- include('../layouts/footer') %>
