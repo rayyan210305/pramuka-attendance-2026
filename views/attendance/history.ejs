@@ -1,0 +1,97 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="main-wrapper">
+  <div class="glass-card">
+    <div class="glass-card-header" style="flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2 class="page-title">Histori Absensi</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">Riwayat seluruh scan kehadiran peserta per kegiatan</p>
+      </div>
+      <a href="/api/reports/export?format=excel&activity_id=<%= filters.activity_id || '' %>" class="btn btn-outline">
+        <%- icon('download', 16) %> Unduh Excel
+      </a>
+    </div>
+
+    <!-- Filter Form -->
+    <form method="GET" action="/attendance" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+      <div style="flex: 1; min-width: 200px;">
+        <input type="text" name="search" class="form-control" placeholder="Cari Nama, Barcode ID, Pesantren..." value="<%= filters.search || '' %>">
+      </div>
+      <div style="width: 220px;">
+        <select name="activity_id" class="form-select" onchange="this.form.submit()">
+          <option value="">-- Semua Kegiatan --</option>
+          <% activities.forEach(act => { %>
+            <option value="<%= act.id %>" <%= filters.activity_id == act.id ? 'selected' : '' %>><%= act.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div style="width: 180px;">
+        <select name="school" class="form-select" onchange="this.form.submit()">
+          <option value="">-- Semua Pesantren --</option>
+          <% schools.forEach(sch => { %>
+            <option value="<%= sch %>" <%= filters.school === sch ? 'selected' : '' %>><%= sch %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div style="width: 160px;">
+        <select name="category" class="form-select" onchange="this.form.submit()">
+          <option value="">-- Semua Golongan --</option>
+          <option value="PENGGALANG" <%= filters.category === 'PENGGALANG' ? 'selected' : '' %>>PENGGALANG</option>
+          <option value="PENEGAK" <%= filters.category === 'PENEGAK' ? 'selected' : '' %>>PENEGAK</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-outline">Filter</button>
+      <% if (filters.search || filters.activity_id || filters.school || filters.category) { %>
+        <a href="/attendance" class="btn btn-outline" style="color: var(--text-muted);">Hapus Filter</a>
+      <% } %>
+    </form>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Barcode ID</th>
+            <th>Nama Peserta</th>
+            <th>Pesantren</th>
+            <th>Golongan</th>
+            <th>Kegiatan Target</th>
+            <th>Waktu Scan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (records && records.length > 0) { %>
+            <% records.forEach(r => { %>
+              <tr>
+                <td><code>#<%= r.id %></code></td>
+                <td><code style="color:var(--cyan-primary); font-family:var(--font-tech); font-weight:700;"><%= r.barcode_id %></code></td>
+                <td><strong><%= r.participant_name %></strong></td>
+                <td><%= r.school %></td>
+                <td>
+                  <span class="badge <%= r.category === 'PENEGAK' ? 'badge-penegak' : 'badge-penggalang' %>">
+                    <%= r.category %>
+                  </span>
+                </td>
+                <td><strong><%= r.activity_name %></strong></td>
+                <td><%= new Date(r.scanned_at).toLocaleString('id-ID') %></td>
+                <td><span class="badge badge-active">HADIR</span></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" onclick="deleteResource('/api/attendance/<%= r.id %>', 'Catatan Absensi')">Batalkan</button>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">Tidak ada histori absensi.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>
