@@ -1,0 +1,185 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="main-wrapper">
+  <!-- Page Header & Export Actions -->
+  <div class="glass-card" style="margin-bottom: 2rem;">
+    <div class="glass-card-header" style="flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2 class="page-title">Laporan Kehadiran</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">Analisis kehadiran berdasarkan kegiatan, pesantren, dan golongan</p>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <select id="reportActivitySelect" class="form-select" style="min-width: 220px;" onchange="loadReportData(this.value)">
+          <% activities.forEach(act => { %>
+            <option value="<%= act.id %>" <%= act.is_active ? 'selected' : '' %>><%= act.name %></option>
+          <% }) %>
+        </select>
+
+        <a id="btnExportExcel" href="/api/reports/export?format=excel" class="btn btn-primary">
+          <%- icon('download', 16) %> Unduh Excel
+        </a>
+        <a id="btnExportCSV" href="/api/reports/export?format=csv" class="btn btn-outline">
+          <%- icon('download', 16) %> Unduh CSV
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Overview Card -->
+  <div class="glass-card" style="margin-bottom: 2rem;">
+    <div class="glass-card-title" style="margin-bottom: 1rem;">
+      <%- icon('trophy', 18) %> Ringkasan Kegiatan
+    </div>
+    <div class="stats-grid" style="margin-bottom: 0;">
+      <div class="stat-card">
+        <div class="stat-icon"><%- icon('users', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value" id="repTotalPeserta">-</div>
+          <div class="stat-label">Total Peserta</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:var(--color-success);"><%- icon('check', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value" id="repHadir" style="color:var(--color-success);">-</div>
+          <div class="stat-label">Peserta Hadir</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:var(--color-warning);"><%- icon('clock', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value" id="repBelumHadir" style="color:var(--color-warning);">-</div>
+          <div class="stat-label">Belum Hadir</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><%- icon('chart', 24) %></div>
+        <div class="stat-info">
+          <div class="stat-value" id="repPercentage">-</div>
+          <div class="stat-label">Persentase Kehadiran</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dual Column Grid for Pesantren & Category Breakdown -->
+  <div class="reports-grid">
+    <!-- School Breakdown -->
+    <div class="glass-card">
+      <div class="glass-card-title" style="margin-bottom: 1.25rem;">
+        <%- icon('building', 17) %> Rekap Kehadiran per Pesantren
+      </div>
+
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Pesantren</th>
+              <th>Total</th>
+              <th>Hadir</th>
+              <th>Belum</th>
+              <th>Persentase</th>
+            </tr>
+          </thead>
+          <tbody id="schoolReportTableBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Category Breakdown -->
+    <div class="glass-card">
+      <div class="glass-card-title" style="margin-bottom: 1.25rem;">
+        <%- icon('users', 17) %> Rekap per Golongan (Penggalang / Penegak)
+      </div>
+
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Golongan</th>
+              <th>Total</th>
+              <th>Hadir</th>
+              <th>Belum</th>
+              <th>Persentase</th>
+            </tr>
+          </thead>
+          <tbody id="categoryReportTableBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('reportActivitySelect');
+  if (select && select.value) {
+    loadReportData(select.value);
+  }
+});
+
+async function loadReportData(activityId) {
+  // Update Export Links
+  document.getElementById('btnExportExcel').href = `/api/reports/export?format=excel&activity_id=${activityId}`;
+  document.getElementById('btnExportCSV').href = `/api/reports/export?format=csv&activity_id=${activityId}`;
+
+  try {
+    const res = await fetch(`/api/reports/summary?activity_id=${activityId}`);
+    const data = await res.json();
+
+    if (data.success) {
+      // Activity Overview
+      if (data.activity) {
+        document.getElementById('repTotalPeserta').innerText = data.activity.total_participants;
+        document.getElementById('repHadir').innerText = data.activity.attended;
+        document.getElementById('repBelumHadir').innerText = data.activity.unattended;
+        document.getElementById('repPercentage').innerText = `${data.activity.percentage}%`;
+      }
+
+      // School Table
+      const schoolBody = document.getElementById('schoolReportTableBody');
+      schoolBody.innerHTML = '';
+      if (data.schools && data.schools.length > 0) {
+        data.schools.forEach(s => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${s.school}</strong></td>
+            <td>${s.total_school_participants}</td>
+            <td><strong style="color:var(--color-success);">${s.attended_count}</strong></td>
+            <td><span style="color:var(--color-warning);">${s.unattended_count}</span></td>
+            <td><strong style="color:var(--cyan-primary);">${s.percentage}%</strong></td>
+          `;
+          schoolBody.appendChild(tr);
+        });
+      }
+
+      // Category Table
+      const catBody = document.getElementById('categoryReportTableBody');
+      catBody.innerHTML = '';
+      if (data.categories && data.categories.length > 0) {
+        data.categories.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><span class="badge ${c.category === 'PENEGAK' ? 'badge-penegak' : 'badge-penggalang'}">${c.category}</span></td>
+            <td>${c.total_category_participants}</td>
+            <td><strong style="color:var(--color-success);">${c.attended_count}</strong></td>
+            <td><span style="color:var(--color-warning);">${c.unattended_count}</span></td>
+            <td><strong style="color:var(--cyan-primary);">${c.percentage}%</strong></td>
+          `;
+          catBody.appendChild(tr);
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Error loading report summary:', err);
+  }
+}
+</script>
+
+<%- include('../layouts/footer') %>
