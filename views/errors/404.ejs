@@ -1,0 +1,29 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="main-wrapper">
+  <div class="glass-card" style="position: relative; overflow: hidden; text-align: center; padding: 4rem 2rem; max-width: 640px; margin: 0 auto;">
+    <div style="position: absolute; top: 0; right: 0; pointer-events: none; opacity: 0.1; z-index: 0;">
+      <img src="/images/maskot.png" alt="Maskot LP3 XVII" style="height: 110px; width: auto; filter: drop-shadow(0 0 14px rgba(251, 191, 36, 0.5));">
+    </div>
+    <div style="position: relative; z-index: 1;">
+    <div style="font-family: var(--font-tech); font-size: 4.5rem; font-weight: 800; color: var(--gold-accent); line-height: 1;">
+      404
+    </div>
+    <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-top: 0.75rem;">
+      Halaman Tidak Ditemukan
+    </div>
+    <p style="color: var(--text-secondary); margin-top: 0.75rem; font-size: 0.95rem; line-height: 1.5;">
+      Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan.
+      Silakan kembali ke Dashboard untuk melanjutkan.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.75rem; flex-wrap: wrap;">
+      <a href="/" class="btn btn-gold" style="padding: 0.75rem 1.5rem;">
+        <%- icon('arrowleft', 16) %> Kembali ke Dashboard
+      </a>
+    </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

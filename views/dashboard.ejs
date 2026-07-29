@@ -1,0 +1,159 @@
+<%- include('layouts/header') %>
+<%- include('layouts/navbar') %>
+
+<div class="main-wrapper">
+  <!-- Active Activity Banner -->
+  <div class="glass-card" style="margin-bottom: 2rem; border-color: rgba(251, 191, 36, 0.4); background: radial-gradient(circle at 90% 50%, rgba(220, 38, 38, 0.15), transparent 60%), var(--bg-glass);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 1.5rem; flex: 1; min-width: 300px;">
+        <!-- Organizational & Event Logos -->
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;">
+          <img src="/images/logo_gpp.png" alt="Logo Satuan Komunitas GPP Aceh" style="height: 46px; width: auto; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3));">
+          <span style="width:1px;height:34px;background:rgba(251,191,36,0.3);display:inline-block;"></span>
+          <img src="/images/logo_lp3_xvii.png" alt="Logo LP3 Putra Aceh" style="height: 62px; width: auto; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));">
+        </div>
+
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem;">
+            <span class="pulse-dot"></span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--gold-accent);">
+              LP3 XVII 2026 • Kegiatan Aktif
+            </span>
+          </div>
+
+          <% if (activeActivity) { %>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); line-height: 1.2;">
+              <%= activeActivity.name %>
+            </h2>
+            <p style="display:flex; align-items:center; flex-wrap:wrap; gap:0.4rem; color: var(--text-secondary); margin-top: 0.35rem; font-size: 0.9rem;">
+              <%- icon('calendar', 15) %> <%= formatTanggal(activeActivity.date) %>
+              <span style="opacity:0.4;">•</span>
+              <%- icon('clock', 15) %> <%= activeActivity.start_time %> - <%= activeActivity.end_time %> WIB
+              <% if (activeActivity.type) { %> <span class="badge badge-type"><%= activeActivity.type %></span><% } %>
+            </p>
+            <% if (activeActivity.location) { %>
+              <p style="display:flex; align-items:center; gap:0.4rem; color: var(--text-secondary); margin-top: 0.15rem; font-size: 0.85rem;">
+                <%- icon('mappin', 15) %> Lokasi: <%= activeActivity.location %>
+              </p>
+            <% } %>
+            <p style="display:flex; align-items:center; gap:0.4rem; color: var(--text-secondary); margin-top: 0.15rem; font-size: 0.8rem;">
+              <%- icon('building', 15) %> Satuan Komunitas Gerakan Pramuka Aceh (GPP Aceh) • Bireuen
+            </p>
+          <% } else { %>
+            <h2 style="display:flex; align-items:center; gap:0.5rem; font-size: 1.5rem; font-weight: 700; color: var(--color-warning);">
+              <%- icon('alert', 22) %> Belum Ada Kegiatan Aktif
+            </h2>
+            <p style="color: var(--text-secondary); margin-top: 0.3rem;">
+              Silakan pilih kegiatan LP3 XVII terlebih dahulu untuk mengaktifkan scanner absensi.
+            </p>
+          <% } %>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <% if (activities && activities.length > 0) { %>
+          <select id="dashActivitySelect" class="form-select" style="min-width: 220px;" onchange="setActivityActive(this.value)">
+            <option value="">-- Pilih Kegiatan Aktif --</option>
+            <% activities.forEach(act => { %>
+              <option value="<%= act.id %>" <%= activeActivity && activeActivity.id === act.id ? 'selected' : '' %>>
+                <%= act.name %> (<%= formatTanggal(act.date) %>)
+              </option>
+            <% }) %>
+          </select>
+        <% } %>
+
+        <a href="/scanner" class="btn btn-gold" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
+          <%- icon('camera', 18) %> <span>Buka Scanner Absensi</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><%- icon('users', 24) %></div>
+      <div class="stat-info">
+        <div class="stat-value"><%= stats.total %></div>
+        <div class="stat-label">Total Peserta LP3</div>
+      </div>
+    </div>
+
+    <div class="stat-card" style="background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12), transparent 70%), var(--bg-surface);">
+      <div class="stat-icon" style="color: var(--color-success); border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1);"><%- icon('check', 24) %></div>
+      <div class="stat-info">
+        <div class="stat-value" id="widgetAttended" style="color: var(--color-success);"><%= stats.attended %></div>
+        <div class="stat-label">Peserta Hadir</div>
+      </div>
+    </div>
+
+    <div class="stat-card" style="background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 70%), var(--bg-surface);">
+      <div class="stat-icon" style="color: var(--color-warning); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.1);"><%- icon('clock', 24) %></div>
+      <div class="stat-info">
+        <div class="stat-value" id="widgetUnattended" style="color: var(--color-warning);"><%= stats.unattended %></div>
+        <div class="stat-label">Belum Hadir</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><%- icon('chart', 24) %></div>
+      <div class="stat-info">
+        <div class="stat-value" id="widgetPercentage"><%= stats.percentage %>%</div>
+        <div class="stat-label">Persentase Kehadiran</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Scans Live Feed Table -->
+  <div class="glass-card">
+    <div class="glass-card-header">
+      <div class="glass-card-title">
+        <%- icon('history', 17) %> Log Scan Terbaru
+      </div>
+      <a href="/attendance" class="btn btn-outline btn-sm">Lihat Semua</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Barcode ID</th>
+            <th>Nama Peserta</th>
+            <th>Pesantren</th>
+            <th>Golongan</th>
+            <th>Kegiatan</th>
+            <th>Waktu Scan</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recentScansTableBody">
+          <% if (recentScans && recentScans.length > 0) { %>
+            <% recentScans.forEach(scan => { %>
+              <tr>
+                <td><code style="color:var(--gold-accent); font-family:var(--font-tech); font-weight:700;"><%= scan.barcode_id %></code></td>
+                <td><strong><%= scan.participant_name %></strong></td>
+                <td><%= scan.school %></td>
+                <td>
+                  <span class="badge <%= scan.category === 'PENEGAK' ? 'badge-penegak' : 'badge-penggalang' %>">
+                    <%= scan.category %>
+                  </span>
+                </td>
+                <td><%= scan.activity_name %></td>
+                <td><%= new Date(scan.scanned_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) %></td>
+                <td><span class="badge badge-active">HADIR</span></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                Belum ada data scan untuk kegiatan ini.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('layouts/footer') %>

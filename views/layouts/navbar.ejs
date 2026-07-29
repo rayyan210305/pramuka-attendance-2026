@@ -1,0 +1,60 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="/" class="nav-brand">
+      <div class="nav-brand-logos">
+        <img src="/images/logo_gpp.png" alt="Logo Satuan Komunitas GPP Aceh" class="nav-brand-logo-img" title="Satuan Komunitas Gerakan Pramuka Aceh (GPP Aceh)" style="height: 34px;">
+        <span style="width:1px;height:28px;background:rgba(251,191,36,0.25);display:inline-block;"></span>
+        <img src="/images/logo_lp3_xvii.png" alt="Logo LP3 Putra Aceh" class="nav-brand-logo-img" title="Logo Kegiatan LP3 Putra Aceh" style="height: 40px;">
+      </div>
+      <div>
+        <span class="brand-crimson">LP3 XVII</span> <span class="brand-gold">2026</span>
+      </div>
+    </a>
+
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Buka menu" onclick="toggleNavMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-menu-panel" id="navMenuPanel">
+      <ul class="nav-menu">
+        <li class="nav-item <%= activePage === 'dashboard' ? 'active' : '' %>">
+          <a href="/"><%- icon('dashboard', 17) %> Dashboard</a>
+        </li>
+        <li class="nav-item <%= activePage === 'scanner' ? 'active' : '' %>">
+          <a href="/scanner"><%- icon('scanner', 17) %> Scanner</a>
+        </li>
+        <li class="nav-item <%= activePage === 'events' ? 'active' : '' %>">
+          <a href="/events"><%- icon('calendar', 17) %> Acara</a>
+        </li>
+        <li class="nav-item <%= activePage === 'activities' ? 'active' : '' %>">
+          <a href="/activities"><%- icon('trophy', 17) %> Kegiatan</a>
+        </li>
+        <li class="nav-item <%= activePage === 'participants' ? 'active' : '' %>">
+          <a href="/participants"><%- icon('users', 17) %> Peserta</a>
+        </li>
+        <li class="nav-item <%= activePage === 'attendance' ? 'active' : '' %>">
+          <a href="/attendance"><%- icon('history', 17) %> Histori</a>
+        </li>
+        <li class="nav-item <%= activePage === 'reports' ? 'active' : '' %>">
+          <a href="/reports"><%- icon('chart', 17) %> Laporan</a>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema terang/gelap" onclick="toggleTheme()">
+          <span id="themeIcon"><%- icon('moon', 18) %></span>
+        </button>
+        <a href="/scanner" class="btn btn-gold btn-sm">
+          <%- icon('zap', 15) %> <span>Buka Scanner</span>
+        </a>
+        <form action="/logout" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-outline btn-sm" title="Keluar dari sistem">
+            <%- icon('logout', 15) %> <span>Keluar</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
