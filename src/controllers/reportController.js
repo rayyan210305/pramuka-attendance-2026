@@ -419,7 +419,7 @@ async function exportReport(req, res) {
         p.school AS "Pesantren",
         p.category AS "Golongan",
         CASE WHEN att.id IS NOT NULL THEN 'HADIR' ELSE 'BELUM HADIR' END AS "Status Kehadiran",
-        CASE WHEN att.id IS NOT NULL THEN to_char(att.scanned_at, 'YYYY-MM-DD HH24:MI:SS') ELSE '' END AS "Waktu Scan"
+        CASE WHEN att.id IS NOT NULL THEN to_char(att.scanned_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') ELSE '' END AS "Waktu Scan"
       FROM participants p
       LEFT JOIN attendance att ON att.participant_id = p.id AND att.activity_id = ?
       ORDER BY p.school ASC, p.name ASC

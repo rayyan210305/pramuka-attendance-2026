@@ -1,4 +1,5 @@
 const { getDatabase } = require('../config/database');
+const { formatWIBClock } = require('../utils/time');
 
 async function handleScan(req, res) {
   try {
@@ -59,11 +60,7 @@ async function handleScan(req, res) {
     );
 
     if (existingAttendance) {
-      const formattedTime = new Date(existingAttendance.scanned_at).toLocaleTimeString('id-ID', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+      const formattedTime = formatWIBClock(existingAttendance.scanned_at);
 
       return res.status(409).json({
         success: false,
@@ -92,11 +89,7 @@ async function handleScan(req, res) {
       VALUES (?, ?, ?, 'PRESENT', 'CAMERA_BROWSER')
     `, [participant.id, activity.id, scannedAt]);
 
-    const formattedTime = new Date().toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
+    const formattedTime = formatWIBClock(scannedAt);
 
     // 5. Compute Updated Activity Stats
     const stats = await db.get(`

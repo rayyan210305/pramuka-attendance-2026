@@ -7,6 +7,7 @@ async function getAllAttendance(req, res) {
 
     let query = `
       SELECT att.*, 
+             to_char(att.scanned_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS scanned_at_wib,
              p.name as participant_name, p.school, p.category, p.barcode_id,
              a.name as activity_name, a.type as activity_type, a.date as activity_date,
              e.name as event_name

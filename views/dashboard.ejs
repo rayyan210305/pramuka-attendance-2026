@@ -139,7 +139,7 @@
                   </span>
                 </td>
                 <td><%= scan.activity_name %></td>
-                <td><%= new Date(scan.scanned_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) %></td>
+                <td><%= scan.scanned_at_wib %> WIB</td>
                 <td><span class="badge badge-active">HADIR</span></td>
               </tr>
             <% }) %>

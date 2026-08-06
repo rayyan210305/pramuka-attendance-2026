@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
     }
 
     const recentScans = await db.all(`
-      SELECT att.*, p.name as participant_name, p.school, p.category, p.barcode_id, a.name as activity_name
+      SELECT att.*, to_char(att.scanned_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') AS scanned_at_wib, p.name as participant_name, p.school, p.category, p.barcode_id, a.name as activity_name
       FROM attendance att
       JOIN participants p ON att.participant_id = p.id
       JOIN activities a ON att.activity_id = a.id

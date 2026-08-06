@@ -76,7 +76,7 @@
                   </span>
                 </td>
                 <td><strong><%= r.activity_name %></strong></td>
-                <td><%= new Date(r.scanned_at).toLocaleString('id-ID') %></td>
+                <td><%= r.scanned_at_wib %> WIB</td>
                 <td><span class="badge badge-active">HADIR</span></td>
                 <td>
                   <button class="btn btn-danger btn-sm" onclick="deleteResource('/api/attendance/<%= r.id %>', 'Catatan Absensi')">Batalkan</button>
