@@ -88,13 +88,14 @@ html[data-theme="light"] {
   pointer-events: none;
   background-image: url('/images/maskot.png');
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  background-position: center 50%;
+  background-size: 62vh auto;
   opacity: 0.05;
+  filter: grayscale(1) brightness(1.05);
 }
 
 html[data-theme="light"] .login-watermark {
-  opacity: 0.045;
+  opacity: 0.04;
 }
 
 * {
