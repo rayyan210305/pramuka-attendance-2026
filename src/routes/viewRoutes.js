@@ -57,8 +57,16 @@ router.get('/', async (req, res) => {
 router.get('/scanner', async (req, res) => {
   try {
     const db = await getDatabase();
-    const activities = await db.all('SELECT a.*, e.name as event_name FROM activities a LEFT JOIN events e ON a.event_id = e.id ORDER BY a.is_active DESC, a.date DESC, a.start_time ASC');
+    const activities = await db.all('SELECT a.*, e.name AS event_name FROM activities a LEFT JOIN events e ON a.event_id = e.id ORDER BY a.is_active DESC, a.date DESC, a.start_time ASC');
     const activeActivity = activities.find(a => a.is_active === 1) || null;
+
+    if (activeActivity) {
+      const totalParticipants = (await db.get('SELECT COUNT(*) as count FROM participants')).count;
+      const attendedCount = (await db.get('SELECT COUNT(*) as count FROM attendance WHERE activity_id = ?', [activeActivity.id])).count;
+      activeActivity.attended_count = attendedCount;
+      activeActivity.unattended_count = totalParticipants - attendedCount;
+      activeActivity.attendance_percentage = totalParticipants > 0 ? ((attendedCount / totalParticipants) * 100).toFixed(1) : 0;
+    }
 
     res.render('scanner', {
       pageTitle: 'Camera Scanner | LP3 XVII 2026',

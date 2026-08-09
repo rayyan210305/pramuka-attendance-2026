@@ -5,13 +5,8 @@ const { getDatabase } = require('./src/config/database');
 const { seed } = require('./src/seeders/seedData');
 const apiRoutes = require('./src/routes/apiRoutes');
 const viewRoutes = require('./src/routes/viewRoutes');
-const {
-  isAuthenticated,
-  verifyPin,
-  setAuthCookie,
-  clearAuthCookie,
-  requireAuth
-} = require('./src/middleware/auth');
+const { isAuthenticated, verifyPin, setAuthCookie, clearAuthCookie, requireAuth } = require('./src/middleware/auth');
+const { syncActivityStatuses } = require('./src/utils/activityStatus');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -94,7 +89,8 @@ function ensureDatabase() {
 
 app.use(async (req, res, next) => {
   try {
-    await ensureDatabase();
+    const db = await ensureDatabase();
+    await syncActivityStatuses(db);
     next();
   } catch (error) {
     console.error('Database init failed:', error);

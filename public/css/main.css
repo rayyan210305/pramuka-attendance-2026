@@ -75,6 +75,28 @@ html[data-theme="light"] {
   --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.06);
 }
 
+/* ============================================================
+   WATERMARK HALAMAN LOGIN
+   ============================================================ */
+.login-watermark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/images/maskot.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.05;
+}
+
+html[data-theme="light"] .login-watermark {
+  opacity: 0.045;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
