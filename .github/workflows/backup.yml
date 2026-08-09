@@ -1,0 +1,43 @@
+name: Backup Database Harian
+
+on:
+  schedule:
+    # 03.00 WIB = 20.00 UTC sehari sebelumnya
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pasang dependensi
+        run: npm ci --omit=dev
+
+      - name: Buat backup database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/backup.js
+
+      - name: Commit backup ke branch backup
+        run: |
+          git config user.name "lp3-backup-bot"
+          git config user.email "lp3-backup-bot@users.noreply.github.com"
+          find backups/ -name '*.json' -mtime +30 -delete
+          git add -f backups/
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan data — skip commit."
+            exit 0
+          fi
+          git commit -m "backup: data otomatis $(date -u +'%Y-%m-%d')"
+          git push --force origin HEAD:backup
