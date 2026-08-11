@@ -3,11 +3,24 @@ const { getDatabase } = require('../config/database');
 async function seed() {
   const db = await getDatabase();
 
-  console.log('🌱 Seeding database for LP3 XVII 2026...');
+  console.log('🌱 Seeding database for LP3 Putra XVII 2026...');
 
   // Only seed once: if the marker exists, the database is managed manually
   const seededMeta = await db.get(`SELECT value FROM app_meta WHERE key = 'seeded'`);
   if (seededMeta) {
+    // Rebrand idempotent: pastikan nama event & kegiatan memakai "LP3 Putra XVII"
+    await db.run(`
+      UPDATE events
+      SET name = ?,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = (SELECT id FROM events ORDER BY id ASC LIMIT 1)
+    `, ['LP3 Putra XVII 2026']);
+    await db.run(`
+      UPDATE activities
+      SET name = REPLACE(name, 'LP3 XVII', 'LP3 Putra XVII'),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE name LIKE '%LP3 XVII%'
+    `);
     console.log('Database already seeded (skipped).');
     return;
   }
@@ -23,12 +36,12 @@ async function seed() {
           updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `, [
-      'LP3 XVII 2026',
+      'LP3 Putra XVII 2026',
       'Lomba Perkemahan Pramuka Pesantren Ke-XVII • Pesantren Modern Al Zahrah - Bireuen',
       existingEvent.id
     ]);
     await db.exec(`INSERT INTO app_meta (key, value) VALUES ('seeded', '1') ON CONFLICT (key) DO NOTHING`);
-    console.log('Database already seeded. Event updated to LP3 XVII 2026.');
+    console.log('Database already seeded. Event updated to LP3 Putra XVII 2026.');
     return;
   }
 
@@ -38,7 +51,7 @@ async function seed() {
     VALUES (?, ?, ?, ?, ?)
     ON CONFLICT (name) DO NOTHING
   `, [
-    'LP3 XVII 2026',
+    'LP3 Putra XVII 2026',
     'Lomba Perkemahan Pramuka Pesantren Ke-XVII • Pesantren Modern Al Zahrah - Bireuen, Aceh',
     '2026-08-05',
     '2026-08-07',
@@ -46,14 +59,14 @@ async function seed() {
   ]);
   let eventId = resultEvent.lastID;
   if (!eventId) {
-    const eventRow = await db.get('SELECT id FROM events WHERE name = ?', ['LP3 XVII 2026']);
+    const eventRow = await db.get('SELECT id FROM events WHERE name = ?', ['LP3 Putra XVII 2026']);
     eventId = eventRow.id;
   }
 
   // 2. Insert Activities
   const activities = [
     {
-      name: 'Upacara Pembukaan LP3 XVII',
+      name: 'Upacara Pembukaan LP3 Putra XVII',
       description: 'Upacara Pembukaan Perkemahan Pramuka Pesantren Ke-XVII',
       type: 'KEGIATAN',
       date: '2026-08-05',
@@ -73,7 +86,7 @@ async function seed() {
       is_active: 0
     },
     {
-      name: 'Lomba Pionering LP3 XVII',
+      name: 'Lomba Pionering LP3 Putra XVII',
       description: 'Perlombaan pembuatan menara pandang & jembatan kreasi',
       type: 'LOMBA',
       date: '2026-08-05',
@@ -94,7 +107,7 @@ async function seed() {
     },
     {
       name: 'Malam Keakraban & Api Unggun',
-      description: 'Pentas seni santri perkemahan & api unggun LP3 XVII',
+      description: 'Pentas seni santri perkemahan & api unggun LP3 Putra XVII',
       type: 'EVENT',
       date: '2026-08-05',
       start_time: '19:30',
@@ -104,7 +117,7 @@ async function seed() {
     },
     {
       name: 'Penutupan & Pengumuman Juara',
-      description: 'Upacara penutupan & penganugerahan juara umum LP3 XVII',
+      description: 'Upacara penutupan & penganugerahan juara umum LP3 Putra XVII',
       type: 'KEGIATAN',
       date: '2026-08-06',
       start_time: '15:00',
@@ -179,7 +192,7 @@ async function seed() {
 
   await db.exec(`INSERT INTO app_meta (key, value) VALUES ('seeded', '1') ON CONFLICT (key) DO NOTHING`);
 
-  console.log('✅ LP3 XVII Seeding completed successfully!');
+  console.log('✅ LP3 Putra XVII Seeding completed successfully!');
 }
 
 module.exports = { seed };

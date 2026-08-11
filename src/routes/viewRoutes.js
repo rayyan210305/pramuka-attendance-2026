@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
     const activities = await db.all('SELECT * FROM activities ORDER BY date DESC, start_time ASC');
 
     res.render('dashboard', {
-      pageTitle: 'Dashboard LP3 XVII | Pramuka Attendance 2026',
+      pageTitle: 'Dashboard LP3 Putra XVII | Pramuka Attendance 2026',
       activePage: 'dashboard',
       activeActivity,
       stats: {
@@ -69,7 +69,7 @@ router.get('/scanner', async (req, res) => {
     }
 
     res.render('scanner', {
-      pageTitle: 'Camera Scanner | LP3 XVII 2026',
+      pageTitle: 'Camera Scanner | LP3 Putra XVII 2026',
       activePage: 'scanner',
       activities,
       activeActivity
@@ -92,7 +92,7 @@ router.get('/events', async (req, res) => {
     `);
 
     res.render('events/index', {
-      pageTitle: 'Kelola Event | LP3 XVII 2026',
+      pageTitle: 'Kelola Event | LP3 Putra XVII 2026',
       activePage: 'events',
       events
     });
@@ -117,7 +117,7 @@ router.get('/activities', async (req, res) => {
     const events = await db.all('SELECT * FROM events ORDER BY name ASC');
 
     res.render('activities/index', {
-      pageTitle: 'Kelola Kegiatan & Lomba | LP3 XVII 2026',
+      pageTitle: 'Kelola Kegiatan & Lomba | LP3 Putra XVII 2026',
       activePage: 'activities',
       activities,
       events
@@ -172,7 +172,7 @@ router.get('/participants', async (req, res) => {
     }));
 
     res.render('participants/index', {
-      pageTitle: 'Data Peserta | LP3 XVII 2026',
+      pageTitle: 'Data Peserta | LP3 Putra XVII 2026',
       activePage: 'participants',
       groups,
       schools: schoolsRows.map(s => s.school),
@@ -196,7 +196,7 @@ router.get('/participants/barcodes', async (req, res) => {
     }
 
     res.render('participants/barcodes', {
-      pageTitle: 'Cetak Batch Barcode & QR Code Peserta | LP3 XVII 2026',
+      pageTitle: 'Cetak Batch Barcode & QR Code Peserta | LP3 Putra XVII 2026',
       activePage: 'participants',
       participants,
       school: school || ''
@@ -251,7 +251,7 @@ router.get('/attendance', async (req, res) => {
     const schools = await db.all('SELECT DISTINCT school FROM participants ORDER BY school ASC');
 
     res.render('attendance/history', {
-      pageTitle: 'Histori Absensi | LP3 XVII 2026',
+      pageTitle: 'Histori Absensi | LP3 Putra XVII 2026',
       activePage: 'attendance',
       records,
       activities,
@@ -270,7 +270,7 @@ router.get('/reports', async (req, res) => {
     const activities = await db.all('SELECT * FROM activities ORDER BY date DESC, start_time ASC');
     
     res.render('reports/index', {
-      pageTitle: 'Laporan & Rekap | LP3 XVII 2026',
+      pageTitle: 'Laporan & Rekap | LP3 Putra XVII 2026',
       activePage: 'reports',
       activities
     });

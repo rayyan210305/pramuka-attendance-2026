@@ -196,7 +196,7 @@
 <div id="createParticipantModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
   <div class="glass-card" style="width: 100%; max-width: 500px; padding: 2rem;">
     <div class="glass-card-header">
-      <h3 style="color: var(--text-primary);">Tambah Peserta LP3 XVII</h3>
+      <h3 style="color: var(--text-primary);">Tambah Peserta LP3 Putra XVII</h3>
       <button class="btn btn-outline btn-sm" onclick="closeModal('createParticipantModal')"><%- icon('x', 16) %></button>
     </div>
     <form id="createParticipantForm">
@@ -238,11 +238,11 @@
   </div>
 </div>
 
-<!-- Modal Printable ID Card with Official LP3 XVII Branding -->
+<!-- Modal Printable ID Card with Official LP3 Putra XVII Branding -->
 <div id="idCardModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
   <div class="glass-card" style="width: 100%; max-width: 440px; padding: 2rem; text-align: center;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <h3 style="color: var(--text-primary);">Kartu Identitas LP3 XVII</h3>
+      <h3 style="color: var(--text-primary);">Kartu Identitas LP3 Putra XVII</h3>
       <button class="btn btn-outline btn-sm" onclick="closeModal('idCardModal')"><%- icon('x', 16) %></button>
     </div>
 
@@ -256,10 +256,10 @@
       </div>
 
       <div style="font-weight: 800; font-size: 0.9rem; letter-spacing: 0.5px; color: #991b1b; margin-bottom: 0.1rem;">
-        LP3 XVII 2026
+        LP3 Putra XVII 2026
       </div>
       <div style="font-size: 0.62rem; color: #475569; font-weight: 700; margin-bottom: 0.85rem; text-transform: uppercase; letter-spacing: 0.3px;">
-        Satuan Komunitas Gerakan Pramuka Aceh (GPP Aceh) • Bireuen
+        Satuan Komunitas Gerakan Pramuka Aceh
       </div>
 
       <div style="border-top: 2px dashed #cbd5e1; margin-bottom: 0.85rem;"></div>
@@ -304,7 +304,7 @@ document.getElementById('createParticipantForm').addEventListener('submit', asyn
     });
     const result = await res.json();
     if (result.success) {
-      showNotification('Berhasil', 'Peserta baru LP3 XVII berhasil ditambahkan', 'success');
+      showNotification('Berhasil', 'Peserta baru LP3 Putra XVII berhasil ditambahkan', 'success');
       setTimeout(() => location.reload(), 600);
     } else {
       showNotification('Gagal', result.message, 'danger');

@@ -102,7 +102,7 @@ app.use(async (req, res, next) => {
 app.get('/login', (req, res) => {
   if (isAuthenticated(req)) return res.redirect('/');
   res.render('login', {
-    pageTitle: 'Login Admin | LP3 XVII 2026',
+    pageTitle: 'Login Admin | LP3 Putra XVII 2026',
     errorMessage: req.query.error ? 'PIN salah. Silakan coba lagi.' : ''
   });
 });
@@ -128,7 +128,7 @@ app.use('/', requireAuth, viewRoutes);
 // Error Handling Middleware
 app.use((req, res, next) => {
   res.status(404).render('errors/404', {
-    pageTitle: '404 - Halaman Tidak Ditemukan | LP3 XVII 2026',
+    pageTitle: '404 - Halaman Tidak Ditemukan | LP3 Putra XVII 2026',
     activePage: ''
   });
 });

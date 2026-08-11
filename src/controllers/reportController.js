@@ -33,7 +33,7 @@ function safeFileName(name) {
 
 function addSummarySheet(wb, data) {
   const { activity, schools, categories, total, hadir, belum, pct } = data;
-  const ws = wb.addWorksheet('Rekap LP3 XVII', {
+  const ws = wb.addWorksheet('Rekap LP3 Putra XVII', {
     properties: { tabColor: { argb: C.gold } },
     views: [{ state: 'visible', showGridLines: false }]
   });
@@ -44,7 +44,7 @@ function addSummarySheet(wb, data) {
 
   const merge = (row, from, to) => ws.mergeCells(row, from, row, to);
 
-  ws.getCell(1, 1).value = 'LAPORAN ABSENSI PRAMUKA LP3 XVII 2026';
+  ws.getCell(1, 1).value = 'LAPORAN ABSENSI PRAMUKA LP3 PUTRA XVII 2026';
   merge(1, 1, 7);
   ws.getRow(1).height = 28;
 
@@ -128,7 +128,7 @@ function addSummarySheet(wb, data) {
 
   const footerRow = afterSchool + 2 + catRows.length + 1;
   const now = new Date();
-  ws.getCell(footerRow, 1).value = `Dokumen dibuat otomatis oleh Sistem Absensi Pramuka LP3 XVII 2026 — ${now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
+  ws.getCell(footerRow, 1).value = `Dokumen dibuat otomatis oleh Sistem Absensi Pramuka LP3 Putra XVII 2026 — ${now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
   merge(footerRow, 1, 7);
   ws.getCell(footerRow, 1).font = { italic: true, size: 9, color: { argb: C.gray } };
 }
@@ -236,7 +236,7 @@ function addSchoolSheet(wb, school, activity) {
 
 async function buildExcelBuffer(records, activity) {
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Panitia LP3 XVII 2026';
+  wb.creator = 'Panitia LP3 Putra XVII 2026';
   wb.created = new Date();
 
   const schools = new Map();
@@ -268,7 +268,7 @@ async function buildExcelBuffer(records, activity) {
   addSummarySheet(wb, { activity, schools, categories, total, hadir, belum: total - hadir, pct });
 
   const sorted = Array.from(schools.values()).sort((a, b) => a.name.localeCompare(b.name));
-  const used = new Set(['Rekap LP3 XVII']);
+  const used = new Set(['Rekap LP3 Putra XVII']);
   sorted.forEach((s) => {
     let name = sanitizeSheetName(s.name);
     if (used.has(name)) {
@@ -440,7 +440,7 @@ async function exportReport(req, res) {
 
     const buffer = await buildExcelBuffer(records, activity);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename="Rekap_LP3XVII_${safeFileName(activity.name)}.xlsx"`);
+    res.setHeader('Content-Disposition', `attachment; filename="Rekap_LP3PutraXVII_${safeFileName(activity.name)}.xlsx"`);
     return res.send(buffer);
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
