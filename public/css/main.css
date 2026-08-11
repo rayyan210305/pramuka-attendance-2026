@@ -41,6 +41,12 @@
 
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Ukuran logo brand (header & footer) */
+  --nav-logo-gpp: 34px;
+  --nav-logo-lp3: 40px;
+  --footer-logo-gpp: 60px;
+  --footer-logo-lp3: 70px;
 }
 
 /* ============================================================
@@ -166,9 +172,23 @@ a:hover {
 }
 
 .nav-brand-logo-img {
-  height: 38px;
   width: auto;
   object-fit: contain;
+}
+
+.nav-logo-gpp {
+  height: var(--nav-logo-gpp);
+}
+
+.nav-logo-lp3 {
+  height: var(--nav-logo-lp3);
+}
+
+.nav-logo-divider {
+  display: inline-block;
+  width: 1px;
+  height: var(--nav-logo-lp3);
+  background: rgba(251, 191, 36, 0.25);
 }
 
 .nav-brand span.brand-gold {
@@ -607,10 +627,30 @@ a:hover {
 }
 
 .footer-logo-img {
-  height: 42px;
   width: auto;
   object-fit: contain;
   opacity: 0.9;
+}
+
+.footer-logo-gpp {
+  height: var(--footer-logo-gpp);
+}
+
+.footer-logo-lp3 {
+  height: var(--footer-logo-lp3);
+}
+
+.footer-logo-divider {
+  display: inline-block;
+  width: 1px;
+  height: var(--footer-logo-lp3);
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.footer-brand-note {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
 /* PULSE DOT */
@@ -707,7 +747,11 @@ a:hover {
   .p-group-header { padding: 0.75rem 1rem; }
   .p-group-body { padding: 0 1rem 1rem; }
   .stats-grid { gap: 0.85rem; }
-  .footer-logos img { height: 38px !important; }
+  :root {
+    --nav-logo-gpp: 30px;
+    --nav-logo-lp3: 30px;
+    --footer-logo-gpp: 38px;
+    --footer-logo-lp3: 38px;
+  }
   .nav-brand { font-size: 1.05rem; }
-  .nav-brand-logo-img { height: 30px !important; }
 }
