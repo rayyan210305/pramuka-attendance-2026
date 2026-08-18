@@ -1,10 +1,13 @@
 const crypto = require('crypto');
 
 const COOKIE_NAME = 'lp3_admin_token';
-const DEFAULT_PIN = 'pramuka2026';
 
 function getAdminPin() {
-  return String(process.env.ADMIN_PIN || DEFAULT_PIN);
+  const pin = process.env.ADMIN_PIN;
+  if (!pin) {
+    throw new Error('ADMIN_PIN environment variable not set!');
+  }
+  return String(pin);
 }
 
 function authToken() {
