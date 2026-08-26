@@ -1,0 +1,339 @@
+{
+  "app": "pramuka-attendance-2026",
+  "version": 1,
+  "exported_at": "2026-08-26T22:44:24.522Z",
+  "data": {
+    "events": [
+      {
+        "id": 2,
+        "name": "LP3 Putra XVII 2026",
+        "description": "Lomba Perkemahan Pramuka Pesantren Ke-XVII • Pesantren Modern Al Zahrah - Bireuen, Aceh",
+        "start_date": "2026-08-05T00:00:00.000Z",
+        "end_date": "2026-08-07T00:00:00.000Z",
+        "status": "ACTIVE",
+        "created_at": "2026-08-06T11:09:35.853Z",
+        "updated_at": "2026-08-26T19:27:00.408Z"
+      }
+    ],
+    "activities": [
+      {
+        "id": 10,
+        "event_id": 2,
+        "name": "Lomba Semaphore & Sandi",
+        "description": "Kompetisi kecepatan & ketepatan penerjemahan semaphore",
+        "type": "LOMBA",
+        "date": "2026-08-05T00:00:00.000Z",
+        "start_time": "13:30:00",
+        "end_time": "15:00:00",
+        "status": "COMPLETED",
+        "is_active": 0,
+        "created_at": "2026-08-06T11:09:36.672Z",
+        "updated_at": "2026-08-09T08:56:57.083Z",
+        "location": ""
+      },
+      {
+        "id": 12,
+        "event_id": 2,
+        "name": "Penutupan & Pengumuman Juara",
+        "description": "Upacara penutupan & penganugerahan juara umum LP3 XVII",
+        "type": "KEGIATAN",
+        "date": "2026-08-06T00:00:00.000Z",
+        "start_time": "15:00:00",
+        "end_time": "16:30:00",
+        "status": "COMPLETED",
+        "is_active": 0,
+        "created_at": "2026-08-06T11:09:37.082Z",
+        "updated_at": "2026-08-09T08:56:57.083Z",
+        "location": ""
+      },
+      {
+        "id": 9,
+        "event_id": 2,
+        "name": "Lomba Pionering LP3 Putra XVII",
+        "description": "Perlombaan pembuatan menara pandang & jembatan kreasi",
+        "type": "LOMBA",
+        "date": "2026-08-05T00:00:00.000Z",
+        "start_time": "10:30:00",
+        "end_time": "12:00:00",
+        "status": "COMPLETED",
+        "is_active": 0,
+        "created_at": "2026-08-06T11:09:36.468Z",
+        "updated_at": "2026-08-11T06:02:23.291Z",
+        "location": ""
+      },
+      {
+        "id": 7,
+        "event_id": 2,
+        "name": "Upacara Pembukaan LP3 Putra XVII",
+        "description": "Upacara Pembukaan Perkemahan Pramuka Pesantren Ke-XVII",
+        "type": "KEGIATAN",
+        "date": "2026-08-05T00:00:00.000Z",
+        "start_time": "08:00:00",
+        "end_time": "09:00:00",
+        "status": "ACTIVE",
+        "is_active": 1,
+        "created_at": "2026-08-06T11:09:36.061Z",
+        "updated_at": "2026-08-11T06:02:23.291Z",
+        "location": ""
+      }
+    ],
+    "participants": [
+      {
+        "id": 22,
+        "barcode_id": "PRM-2026-0001",
+        "name": "rayyan mardhatillah",
+        "school": "MAN 1 Sabang",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:27.723Z",
+        "updated_at": "2026-08-06T12:14:27.723Z",
+        "kode": ""
+      },
+      {
+        "id": 23,
+        "barcode_id": "PRM-2026-0011",
+        "name": "Fathur Rahman",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:27.924Z",
+        "updated_at": "2026-08-06T12:14:27.924Z",
+        "kode": ""
+      },
+      {
+        "id": 24,
+        "barcode_id": "PRM-2026-0012",
+        "name": "Muhammad Raihan",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:28.127Z",
+        "updated_at": "2026-08-06T12:14:28.127Z",
+        "kode": ""
+      },
+      {
+        "id": 25,
+        "barcode_id": "PRM-2026-0013",
+        "name": "Usman Khalil",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:28.330Z",
+        "updated_at": "2026-08-06T12:14:28.330Z",
+        "kode": ""
+      },
+      {
+        "id": 26,
+        "barcode_id": "PRM-2026-0014",
+        "name": "Baihaqi Zaki",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:28.535Z",
+        "updated_at": "2026-08-06T12:14:28.535Z",
+        "kode": ""
+      },
+      {
+        "id": 27,
+        "barcode_id": "PRM-2026-0015",
+        "name": "Irham Abdullah",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:28.741Z",
+        "updated_at": "2026-08-06T12:14:28.741Z",
+        "kode": ""
+      },
+      {
+        "id": 28,
+        "barcode_id": "PRM-2026-0016",
+        "name": "Najib Kamil",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:28.945Z",
+        "updated_at": "2026-08-06T12:14:28.945Z",
+        "kode": ""
+      },
+      {
+        "id": 29,
+        "barcode_id": "PRM-2026-0017",
+        "name": "Farhan Naufal",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:29.151Z",
+        "updated_at": "2026-08-06T12:14:29.151Z",
+        "kode": ""
+      },
+      {
+        "id": 30,
+        "barcode_id": "PRM-2026-0018",
+        "name": "Rizki Pratama",
+        "school": "Pesantren AL Manar",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-06T12:14:29.307Z",
+        "updated_at": "2026-08-06T12:14:29.307Z",
+        "kode": ""
+      },
+      {
+        "id": 31,
+        "barcode_id": "PRM-2026-0019",
+        "name": "Umar Abdurrahman",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:29.466Z",
+        "updated_at": "2026-08-06T12:14:29.466Z",
+        "kode": ""
+      },
+      {
+        "id": 32,
+        "barcode_id": "PRM-2026-0020",
+        "name": "Haidar Faruq",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:29.586Z",
+        "updated_at": "2026-08-06T12:14:29.586Z",
+        "kode": ""
+      },
+      {
+        "id": 33,
+        "barcode_id": "PRM-2026-0021",
+        "name": "Sulaiman Arif",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:29.763Z",
+        "updated_at": "2026-08-06T12:14:29.763Z",
+        "kode": ""
+      },
+      {
+        "id": 34,
+        "barcode_id": "PRM-2026-0022",
+        "name": "Zaidan Mukhlis",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:29.879Z",
+        "updated_at": "2026-08-06T12:14:29.879Z",
+        "kode": ""
+      },
+      {
+        "id": 35,
+        "barcode_id": "PRM-2026-0023",
+        "name": "Alfarizy Hamzah",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:30.073Z",
+        "updated_at": "2026-08-06T12:14:30.073Z",
+        "kode": ""
+      },
+      {
+        "id": 36,
+        "barcode_id": "PRM-2026-0024",
+        "name": "Fikri Ash-shidiq",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:30.186Z",
+        "updated_at": "2026-08-06T12:14:30.186Z",
+        "kode": ""
+      },
+      {
+        "id": 37,
+        "barcode_id": "PRM-2026-0025",
+        "name": "Hanif Abdullah",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:30.302Z",
+        "updated_at": "2026-08-06T12:14:30.302Z",
+        "kode": ""
+      },
+      {
+        "id": 38,
+        "barcode_id": "PRM-2026-0026",
+        "name": "Irsyadul Umam",
+        "school": "Pesantren AL Manar",
+        "category": "PENEGAK",
+        "created_at": "2026-08-06T12:14:30.417Z",
+        "updated_at": "2026-08-06T12:14:30.417Z",
+        "kode": ""
+      },
+      {
+        "id": 40,
+        "barcode_id": "PLM-2026-0001",
+        "name": "Dzaka Nur Ahmad Shafy",
+        "school": "Oemar Diyan",
+        "category": "PENEGAK",
+        "created_at": "2026-08-07T09:55:37.687Z",
+        "updated_at": "2026-08-07T09:55:37.687Z",
+        "kode": ""
+      },
+      {
+        "id": 41,
+        "barcode_id": "PRM-2026-0041",
+        "name": "Orang Baru",
+        "school": "MAN 1 Sabang",
+        "category": "PENGGALANG",
+        "created_at": "2026-08-10T05:11:52.697Z",
+        "updated_at": "2026-08-10T05:11:52.697Z",
+        "kode": "202603"
+      }
+    ],
+    "attendance": [
+      {
+        "id": 37,
+        "participant_id": 22,
+        "activity_id": 12,
+        "scanned_at": "2026-08-06T12:49:21.000Z",
+        "status": "PRESENT",
+        "scanner_source": "CAMERA_BROWSER",
+        "notes": null,
+        "created_at": "2026-08-06T12:49:21.109Z"
+      },
+      {
+        "id": 38,
+        "participant_id": 22,
+        "activity_id": 9,
+        "scanned_at": "2026-08-06T13:05:01.000Z",
+        "status": "PRESENT",
+        "scanner_source": "CAMERA_BROWSER",
+        "notes": null,
+        "created_at": "2026-08-06T13:05:01.156Z"
+      },
+      {
+        "id": 39,
+        "participant_id": 40,
+        "activity_id": 7,
+        "scanned_at": "2026-08-07T09:57:02.000Z",
+        "status": "PRESENT",
+        "scanner_source": "CAMERA_BROWSER",
+        "notes": null,
+        "created_at": "2026-08-07T09:57:02.965Z"
+      },
+      {
+        "id": 40,
+        "participant_id": 40,
+        "activity_id": 12,
+        "scanned_at": "2026-08-07T09:57:45.000Z",
+        "status": "PRESENT",
+        "scanner_source": "CAMERA_BROWSER",
+        "notes": null,
+        "created_at": "2026-08-07T09:57:45.921Z"
+      },
+      {
+        "id": 42,
+        "participant_id": 40,
+        "activity_id": 9,
+        "scanned_at": "2026-08-08T09:10:33.000Z",
+        "status": "PRESENT",
+        "scanner_source": "CAMERA_BROWSER",
+        "notes": null,
+        "created_at": "2026-08-08T09:10:33.462Z"
+      }
+    ],
+    "app_meta": [
+      {
+        "key": "seeded",
+        "value": "1"
+      },
+      {
+        "key": "admin_pin_hash",
+        "value": "f2bd64663eae99a171bd1683fc2c0a8f:7d9268b4d5cae38179f9f3ab1fd0d128b0e335ddee369dafea8e0140175886be"
+      },
+      {
+        "key": "admin_pin_token",
+        "value": "b9df6e85098d5aa075255bb83b8ecac43c1ee20650665453239ce32dd841bf05"
+      }
+    ]
+  }
+}
